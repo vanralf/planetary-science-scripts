@@ -6,7 +6,7 @@ def calculate_molecular_mass(formula):
     "N": 14.007
   }
 
-element_counts = {"H": 0, "C": 0, "O": 0, "N":0}
+element_counts = {}
 current_element = ""
 number_buffer = ""
 
@@ -16,20 +16,29 @@ for char in formula:
         count = int(number_buffer)
         element_counts[current_element] += (count - 1)
         number_buffer = ""
+        
       current_element = char
+
+      if current_element not in element_counts:
+        element_counts[current_element] = 0
+        
       element_counts[current_element] += 1
+      
     elif char.isdigit():
       number_buffer += char
 
-if number_buffer != ""
+if number_buffer != "":
   count = int(number_buffer)
   element_counts[current_element] += (count - 1)
 
 total_mass = 0
 
-for element, count in elemenet_counts.items():
+for element, count in element_counts.items():
   if count > 0:
-    total_mass += count * atomic_masses[element]
+    if element in atomic_masses:
+      total_mass += count * atomic_masses[element]
+    else:
+      print(f"Unknown atmoic mass for {element}")
 
 return total_mass, element_counts
 
@@ -38,4 +47,4 @@ final_mass, final_counts = calculate_molecular_mass(test_molecule)
 
 print(f"Analyzing Molecule: {test_molecule}")
 print(f"Element Breakdown: {final_counts}")
-print(f"Total Molecular Mass: {final_mass}")
+print(f"Total Molecular Mass: {final_mass:.3f}")
