@@ -24,7 +24,8 @@ ATOMIC_MASSES = {
     "Rg": 282,     "Cn": 285,    "Nh": 286,     "Fl": 289,     "Mc": 289,
     "Lv": 293,     "Ts": 294,    "Og": 294,
 }
-
+# This code takes in a molecule and returns the molecular weight by parsing through each character, identifying the element
+# and keep track of the amount to find the sum of atmoic weights
 def calculate_molecular_mass(formula):
   element_counts = {}
   i = 0
