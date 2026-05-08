@@ -31,7 +31,7 @@ def calculate_molecular_mass(formula):
   i = 0
   while i < len(formula):
       if not formula[i].isupper():
-          raise ValueError(f"Unexpected character {formula[i]!r} at positio {i}")
+          raise ValueError(f"Unexpected character {formula[i]!r} at position {i}!")
       element = formula[i]
       i += 1
       if i < len(formula) and formula[i].islower():
