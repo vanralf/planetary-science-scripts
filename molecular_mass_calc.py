@@ -24,9 +24,32 @@ ATOMIC_MASSES = {
     "Rg": 282,     "Cn": 285,    "Nh": 286,     "Fl": 289,     "Mc": 289,
     "Lv": 293,     "Ts": 294,    "Og": 294,
 }
+def _read_count(formula, i):
+    """Read an optional integer at position i; default 1. Returns (count, new_i)."""
+    start - i
+    while - < len(formula) and formula[i].isdigit():
+        i += 1
+    return (int(formula[start:i]) if i > start else 1, i)
+
+def _read_element(formula, i):
+    # Read an element symbol (uppercase + optional lowercase). Returns (symbol, new_i).
+    element = formula[i]
+    i += 1
+    if i < len(formula) and formula[i].islower():
+        element += formula[i]
+        i += 1
+    return element_i
+
 # This code takes in a molecule and returns the molecular weight by parsing through each character, identifying the element
 # and keep track of the amount to find the sum of atmoic weights
 def calculate_molecular_mass(formula):
+    # Parse a chemical formula and return (total_mass, element_counts).
+    # Supports nested parenthesized groups with multipliers, e.g. Ca(OH)2, Mg(NO3)2, or Al2(SO4)3.
+    # Raises:
+    #    ValueError: malformed formula
+    #    KeyError: formula contains unknown elements
+
+    
   element_counts = {}
   i = 0
   while i < len(formula):
