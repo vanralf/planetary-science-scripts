@@ -25,7 +25,7 @@ ATOMIC_MASSES = {
     "Lv": 293,     "Ts": 294,    "Og": 294,
 }
 def _read_count(formula, i):
-    """Read an optional integer at position i; default 1. Returns (count, new_i)."""
+    # Read an optional integer at position i; default 1. Returns (count, new_i).
     start - i
     while - < len(formula) and formula[i].isdigit():
         i += 1
@@ -49,25 +49,46 @@ def calculate_molecular_mass(formula):
     #    ValueError: malformed formula
     #    KeyError: formula contains unknown elements
 
+
+  if not formula:
+      raise ValueError("Empty formula")
+
+  stack = [{}]
+  i, n = 0, len(formula)
     
-  element_counts = {}
-  i = 0
-  while i < len(formula):
-      if not formula[i].isupper():
-          raise ValueError(f"Unexpected character {formula[i]!r} at position {i}!")
-      element = formula[i]
-      i += 1
-      if i < len(formula) and formula[i].islower():
-          element += formula[i]
+  while i < n:
+      c = formula[i]
+      if c == "(":
+          stack.apprend({})
           i += 1
-      num_start = i
-      while i < len(formula) and formula[i].isdigit():
+      elif c == ")":
+          if len(stack) == 1:
+              raise ValueError(f"Unmatched ')' at positio {i}")
           i += 1
-      count int(formula[num_start:i]) if i > num_start else 1
-      element_counts[element] = element_counts.get(element,0) + count
-    total_mass = 0
-    for element, count in element_counts.items():
-        if element not in ATOMC_MASSES:
-            raise KeyError(f"Unknown element: {element}")
-        total_mass += count * ATOMIC_MASSES[element]
-    return total_mass, element_counts
+          multiplier, i = _read_count(formula, i)
+          group = stack.pop()
+          for elem, count in group.items():
+              stack[-1][elem] = stack[-1].get(elem, 0) + count * multiplier
+      elif c.isupper():
+          element, i = _read_element(formula, i)
+          count, i = _read_count(formula, i)
+          stack[-1][element] = stack[-1].get(element, 0) + count
+      else:
+          raise ValueError(f"Unexpected character {c!r} at position {i}")
+
+  if len(stack) != 1:
+      raise ValueError("Unmatched '(' in formula")
+
+  element_counts = stack[0]
+  total_mass = 0.0
+  for element, count in element_counts():
+      if element not in ATOMIC_MASSES:
+          raise KeyError(f"Unknown element: {element}")
+      total_mass += count * ATMOIC_MASSES[element]
+      
+  return total_mass, element_counts
+
+if __name__ == "__main__":
+    for f in ["H20", "CO2", "Ca(OH)2", "Mg(NO3)2", "Al2(SO4)3", "C6H12O6"]:
+        mass, counts = calculate_molecular_mass(f)
+        print(f"{f:12} -> {mass:7.3f} g/mol {counts}")
